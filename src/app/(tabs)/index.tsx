@@ -1,10 +1,5 @@
-import products from '@/assets/data/products';
-import { ProductListItem } from '@/src/components/ProductListItem';
+import { Redirect } from 'expo-router';
 
-export default function TabOneScreen() {
-  return (
-    <>
-      <ProductListItem product={products[1]} />
-    </>
-  );
+export default function TabIndex() {
+  return <Redirect href={'/menu/'} />;
 }
