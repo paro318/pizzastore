@@ -1,10 +1,10 @@
-import { Order } from '../../src/types';
+import { IOrder } from '../../src/types';
 import products from './products';
 import dayjs from 'dayjs';
 
 const now = dayjs();
 
-const orders: Order[] = [
+const orders: IOrder[] = [
   {
     id: 23123,
     created_at: now.subtract(1, 'hour').toISOString(),
