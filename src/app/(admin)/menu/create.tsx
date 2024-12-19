@@ -1,15 +1,19 @@
-import { Image, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Image, StyleSheet, Text, TextInput, View } from 'react-native';
 import React, { useState } from 'react';
 import Button from '@/src/components/Button';
 import { defaultPizzaImage } from '@/assets/data/products';
 import Colors from '@/src/constants/Colors';
 import * as ImagePicker from 'expo-image-picker';
+import { Stack, useLocalSearchParams } from 'expo-router';
 
 const CreateProductScreen = () => {
+  const { id } = useLocalSearchParams();
   const [name, setName] = useState<string>('');
   const [price, setPrice] = useState<string>('');
   const [errors, setErrors] = useState<string>('');
   const [image, setImage] = useState<string | null>(null);
+
+  const isUpdating = !!id;
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -48,7 +52,26 @@ const CreateProductScreen = () => {
 
     return true;
   };
+
+  const onSubmit = () => {
+    if (isUpdating) {
+      onUpdate();
+    } else {
+      onCreate();
+    }
+  };
+
   const onCreate = () => {
+    if (!validateInput()) {
+      return;
+    }
+
+    console.warn('cresting');
+
+    resetFields();
+  };
+
+  const onUpdate = () => {
     if (!validateInput()) {
       return;
     }
@@ -62,34 +85,58 @@ const CreateProductScreen = () => {
     setPrice('');
     setName('');
   };
-  return (
-    <View style={styles.container}>
-      <Image
-        source={{ uri: image || defaultPizzaImage }}
-        style={styles.image}
-      />
-      <Text onPress={pickImage} style={styles.textButton}>
-        select image
-      </Text>
-      <Text style={styles.label}>Name</Text>
-      <TextInput
-        value={name}
-        onChangeText={setName}
-        placeholder='Name'
-        style={styles.input}
-      />
 
-      <Text style={styles.label}>Price(INR)</Text>
-      <TextInput
-        placeholder='99'
-        style={styles.input}
-        keyboardType='numeric'
-        value={price}
-        onChangeText={setPrice}
-      />
-      <Text style={{ color: 'red', fontStyle: 'italic' }}>{errors}</Text>
-      <Button text='create' onPress={onCreate} />
-    </View>
+  const onDelete = () => {};
+  const confirmDelete = () => {
+    Alert.alert('Confirm', 'Are you sure you want to delete this product', [
+      {
+        text: 'Cancel',
+      },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: onDelete,
+      },
+    ]);
+  };
+  return (
+    <>
+      <Stack.Screen options={{ title: isUpdating ? 'Update' : 'Create' }} />
+      <View style={styles.container}>
+        <Image
+          source={{ uri: image || defaultPizzaImage }}
+          style={styles.image}
+        />
+        <Text onPress={pickImage} style={styles.textButton}>
+          select image
+        </Text>
+        <Text style={styles.label}>Name</Text>
+        <TextInput
+          value={name}
+          onChangeText={setName}
+          placeholder='Name'
+          style={styles.input}
+        />
+
+        <Text style={styles.label}>Price(INR)</Text>
+        <TextInput
+          placeholder='99'
+          style={styles.input}
+          keyboardType='numeric'
+          value={price}
+          onChangeText={setPrice}
+        />
+        <Text style={{ color: 'red', fontStyle: 'italic' }}>{errors}</Text>
+        <Button text={isUpdating ? 'Update' : 'Create'} onPress={onSubmit} />
+        {isUpdating && (
+          <Button
+            style={[styles.textButton, { backgroundColor: 'transparent' }]}
+            text='Delete Product'
+            onPress={confirmDelete}
+          />
+        )}
+      </View>
+    </>
   );
 };
 
