@@ -33,30 +33,9 @@ const ProductDetailScreen = () => {
         source={{ uri: product.image || defaultPizzaImage }}
         style={styles.image}
       />
-      <Text>Select Size</Text>
-      <View style={styles.sizes}>
-        {sizes.map((s) => (
-          <Pressable
-            onPress={() => setSelectedSize(s)}
-            key={s}
-            style={[
-              styles.size,
-              { backgroundColor: selectedSize === s ? 'gainsboro' : 'white' },
-            ]}
-          >
-            <Text
-              style={[
-                styles.sizeText,
-                { color: selectedSize === s ? 'black' : 'gray' },
-              ]}
-            >
-              {s}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
+
+      <Text style={styles.title}>{product.name}</Text>
       <Text style={styles.price}>${product.price}</Text>
-      <Button text='Add to Cart' onPress={addToCart} />
     </View>
   );
 };
@@ -71,20 +50,7 @@ const styles = StyleSheet.create({
   },
   image: { width: '100%', aspectRatio: 1 },
   price: { fontSize: 16, fontWeight: 'bold' },
-  sizes: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 10,
-  },
-  size: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 50,
-    aspectRatio: 1,
-    // backgroundColor: 'gainsboro',
-    borderRadius: 25,
-    borderWidth: 1,
-    borderColor: 'transparent',
-  },
-  sizeText: { fontSize: 20, fontWeight: '500' },
+
+  sizeText: { fontSize: 18, fontWeight: '500' },
+  title: { fontSize: 20, fontWeight: '500' },
 });
