@@ -47,6 +47,7 @@ export default function TabLayout() {
         options={{
           title: 'Orders',
           tabBarIcon: ({ color }) => <TabBarIcon name='list' color={color} />,
+          headerShown: false,
         }}
       />
     </Tabs>
