@@ -41,9 +41,9 @@ const ProductDetailScreen = () => {
   }
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: product.name }} />
+      <Stack.Screen options={{ title: product?.name }} />
       <Image
-        source={{ uri: product.image || defaultPizzaImage }}
+        source={{ uri: product?.image || defaultPizzaImage }}
         style={styles.image}
       />
       <Text>Select Size</Text>
@@ -68,7 +68,7 @@ const ProductDetailScreen = () => {
           </Pressable>
         ))}
       </View>
-      <Text style={styles.price}>${product.price}</Text>
+      <Text style={styles.price}>${product?.price}</Text>
       <Button text='Add to Cart' onPress={addToCart} />
     </View>
   );
