@@ -3,6 +3,7 @@ import React from 'react';
 import Colors from '../constants/Colors';
 // import { Tables } from '../types';
 import { defaultPizzaImage } from '@/assets/data/products';
+import { Tables } from '../types';
 
 type OrderItemListItemProps = {
   item: { products: Tables<'products'> } & Tables<'order_items'>;

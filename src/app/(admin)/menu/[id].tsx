@@ -36,7 +36,7 @@ const ProductDetailScreen = () => {
     <>
       <Stack.Screen
         options={{
-          title: product.name || 'Product Details',
+          title: product?.name || 'Product Details',
           headerRight: () => (
             <Link href={`/(admin)/menu/create?id=${id}`} asChild>
               <Pressable>
@@ -55,12 +55,12 @@ const ProductDetailScreen = () => {
       />
       <View style={styles.container}>
         <Image
-          source={{ uri: product.image || defaultPizzaImage }}
+          source={{ uri: product?.image || defaultPizzaImage }}
           style={styles.image}
         />
 
-        <Text style={styles.title}>{product.name}</Text>
-        <Text style={styles.price}>${product.price}</Text>
+        <Text style={styles.title}>{product?.name}</Text>
+        <Text style={styles.price}>${product?.price}</Text>
       </View>
     </>
   );

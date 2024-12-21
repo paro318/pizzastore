@@ -1,24 +1,40 @@
 import orders from '@/assets/data/orders';
+import { useOrderDetails, useUpdateOrder } from '@/src/api/orders';
 import OrderItemListItem from '@/src/components/OrderItemListItem';
 import OrderListItem from '@/src/components/OrderListItem';
 import Colors from '@/src/constants/Colors';
 import { OrderStatusList } from '@/src/types';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { FlatList, Pressable, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
 
 export default function OrderDetailsScreen() {
-  const { id } = useLocalSearchParams();
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === 'string' ? idString : idString[0]);
+  const { data: order, isLoading, error } = useOrderDetails(id);
+  const { mutate: updateOrder } = useUpdateOrder();
 
-  const order = orders.find((order) => order.id.toString() === id);
-
-  if (!order) {
-    return <Text>Order Not Found!</Text>;
+  if (isLoading) {
+    return <ActivityIndicator />;
   }
+
+  if (error) {
+    return <Text>Failed to fetch orders : {error.message}</Text>;
+  }
+  // console.log('FETCHED ORDER', order);
+  const updateStatus = (status: string) => {
+    updateOrder({ id: id, updatedFields: { status } });
+  };
   return (
     <>
       <Stack.Screen options={{ title: `Order: ${id}` }} />
       <FlatList
-        data={order.order_items}
+        data={order?.order_items}
         renderItem={({ item }) => <OrderItemListItem item={item} />}
         contentContainerStyle={{ gap: 10 }}
         ListHeaderComponent={() => <OrderListItem order={order} />}
@@ -29,7 +45,7 @@ export default function OrderDetailsScreen() {
               {OrderStatusList.map((status) => (
                 <Pressable
                   key={status}
-                  // onPress={() => updateStatus(status)}
+                  onPress={() => updateStatus(status)}
                   style={{
                     borderColor: Colors.light.tint,
                     borderWidth: 1,
@@ -37,7 +53,7 @@ export default function OrderDetailsScreen() {
                     borderRadius: 5,
                     marginVertical: 10,
                     backgroundColor:
-                      order.status === status
+                      order?.status === status
                         ? Colors.light.tint
                         : 'transparent',
                   }}
@@ -45,7 +61,7 @@ export default function OrderDetailsScreen() {
                   <Text
                     style={{
                       color:
-                        order.status === status ? 'white' : Colors.light.tint,
+                        order?.status === status ? 'white' : Colors.light.tint,
                     }}
                   >
                     {status}
