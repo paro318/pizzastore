@@ -8,24 +8,16 @@ import { IPizzaSize } from '@/src/types';
 import { FontAwesome } from '@expo/vector-icons';
 import Colors from '@/src/constants/Colors';
 import { useProduct } from '@/src/api/products';
+import RemoteImage from '@/src/components/RemoteImage';
 
 const sizes: IPizzaSize[] = ['S', 'M', 'L', 'XL'];
 
 const ProductDetailScreen = () => {
   const { id: idString } = useLocalSearchParams();
   const id = parseFloat(typeof idString === 'string' ? idString : idString[0]);
-  const [selectedSize, setSelectedSize] = useState<IPizzaSize>('M');
-  const { addItem } = useCart();
   const router = useRouter();
   const { data: product, error, isLoading } = useProduct(id);
 
-  const addToCart = () => {
-    if (!product) {
-      return;
-    }
-    addItem(product, selectedSize);
-    router.push('/cart');
-  };
   if (isLoading) {
     return <ActivityIndicator />;
   }
@@ -54,11 +46,12 @@ const ProductDetailScreen = () => {
         }}
       />
       <View style={styles.container}>
-        <Image
-          source={{ uri: product?.image || defaultPizzaImage }}
+        <RemoteImage
+          path={product?.image}
+          fallback={defaultPizzaImage}
           style={styles.image}
+          resizeMode='contain'
         />
-
         <Text style={styles.title}>{product?.name}</Text>
         <Text style={styles.price}>${product?.price}</Text>
       </View>

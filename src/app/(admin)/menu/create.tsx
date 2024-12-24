@@ -11,6 +11,10 @@ import {
   useProduct,
   useUpdateProduct,
 } from '@/src/api/products';
+import * as FileSystem from 'expo-file-system';
+import { randomUUID } from 'expo-crypto';
+import { supabase } from '@/src/lib/supabase';
+import { decode } from 'base64-arraybuffer';
 
 const CreateProductScreen = () => {
   const { id: idString } = useLocalSearchParams();
@@ -83,17 +87,42 @@ const CreateProductScreen = () => {
     }
   };
 
-  const onCreate = () => {
+  const uploadImage = async () => {
+    if (!image?.startsWith('file://')) return;
+    console.warn('uploading image');
+
+    const base64 = await FileSystem.readAsStringAsync(image, {
+      encoding: 'base64',
+    });
+    const filePath = `${randomUUID()}.png`;
+    const contentType = 'image/png';
+    const { error, data } = await supabase.storage
+      .from('product-images')
+      .upload(filePath, decode(base64), { contentType });
+    console.warn('image uploaded', data);
+
+    if (data) {
+      return data.path;
+    }
+    if (error) {
+      console.log(`error`, error);
+      return null;
+    }
+  };
+  const onCreate = async () => {
     if (!validateInput()) {
       return;
     }
 
-    // console.warn('cresting');
+    console.warn('creating');
+    const imagePath = await uploadImage();
 
     insertProduct(
-      { name, price: parseFloat(price), image },
+      { name, price: parseFloat(price), image: imagePath },
       {
         onSuccess: () => {
+          console.warn('product created');
+
           resetFields();
           router.back();
         },

@@ -1,5 +1,6 @@
 import orders from '@/assets/data/orders';
 import { useOrderDetails, useUpdateOrder } from '@/src/api/orders';
+import { useUpdateOrderSubscription } from '@/src/api/orders/subscriptions';
 import OrderItemListItem from '@/src/components/OrderItemListItem';
 import OrderListItem from '@/src/components/OrderListItem';
 import Colors from '@/src/constants/Colors';
@@ -16,6 +17,7 @@ import {
 export default function OrderDetailsScreen() {
   const { id: idString } = useLocalSearchParams();
   const id = parseFloat(typeof idString === 'string' ? idString : idString[0]);
+  useUpdateOrderSubscription(id);
   const { data: order, isLoading, error } = useOrderDetails(id);
   const { mutate: updateOrder } = useUpdateOrder();
 

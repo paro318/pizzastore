@@ -1,9 +1,10 @@
-import orders from '@/assets/data/orders';
 import { useAdminOrderList } from '@/src/api/orders';
+import { useInsertOrderSubscription } from '@/src/api/orders/subscriptions';
 import OrderListItem from '@/src/components/OrderListItem';
 import { ActivityIndicator, FlatList, Text } from 'react-native';
 
 export default function OrderScreen() {
+  useInsertOrderSubscription();
   const {
     data: orders,
     isLoading,

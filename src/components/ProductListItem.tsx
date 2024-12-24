@@ -3,6 +3,7 @@ import { Tables } from '../types';
 import { defaultPizzaImage } from '@/assets/data/products';
 import { Link, useSegments } from 'expo-router';
 import Colors from '../constants/Colors';
+import RemoteImage from './RemoteImage';
 
 type ProductListItemProps = {
   product: Tables<'products'>;
@@ -13,11 +14,17 @@ export const ProductListItem = ({ product }: ProductListItemProps) => {
   return (
     <Link href={`/${segments[0]}/menu/${product.id}`} asChild>
       <Pressable style={styles.container}>
-        <Image
+        {/* <Image
           source={{ uri: product.image || defaultPizzaImage }}
           style={styles.image}
           resizeMode='contain'
           onError={() => console.log('Image failed to load')} // Log if the image fails to load
+        /> */}
+        <RemoteImage
+          path={product?.image}
+          fallback={defaultPizzaImage}
+          style={styles.image}
+          resizeMode='contain'
         />
         <Text style={styles.title}>{product.name}</Text>
         <Text style={styles.price}>${product.price}</Text>
