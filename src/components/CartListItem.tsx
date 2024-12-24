@@ -6,6 +6,7 @@ import { useCart } from '../providers/CartProvider';
 // import RemoteImage from './RemoteImage';
 import { defaultPizzaImage } from '@/assets/data/products';
 import { ICartItem } from '../types';
+import RemoteImage from './RemoteImage';
 
 type CartListItemProps = {
   cartItem: ICartItem;
@@ -16,12 +17,12 @@ const CartListItem = ({ cartItem }: CartListItemProps) => {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: cartItem.product.image || defaultPizzaImage }}
+      <RemoteImage
+        path={cartItem.product?.image}
+        fallback={defaultPizzaImage}
         style={styles.image}
         resizeMode='contain'
       />
-
       <View style={{ flex: 1 }}>
         <Text style={styles.title}>{cartItem.product.name}</Text>
         <View style={styles.subtitleContainer}>
